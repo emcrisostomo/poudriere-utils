@@ -56,7 +56,7 @@ print_usage()
   print -- "${PROGNAME}"
   print
   print -- "Usage:"
-  print -- "${PROGNAME} [option]* file+"
+  print -- "${PROGNAME} [option]*"
   print
   print -- "Options:"
   print -- "  -a         Use the specified architecture."
