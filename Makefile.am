@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2015 Enrico M. Crisostomo <enrico.m.crisostomo@gmail.com>
 # All rights reserved.
 #
@@ -28,7 +27,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 dist_doc_DATA  = README.md AUTHORS LICENSE NEWS
-bin_SCRIPTS    = src/poudriere-run.sh
+bin_SCRIPTS  = src/poudriere-create.sh src/poudriere-delete.sh
+bin_SCRIPTS += src/poudriere-run.sh src/poudriere-utils.sh
 
 dist-hook:
 # The recipe cannot assume a file in $(distdir) is writable.
