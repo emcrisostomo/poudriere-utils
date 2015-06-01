@@ -60,12 +60,12 @@ print_usage()
   print -- "${PROGNAME} [option]* file+"
   print
   print -- "Options:"
-  print -- " -a         Use the specified architecture."
-  print -- " -h         Show this help."
-  print -- " -j         Use the specified jail."
-  print -- " -U         Update the jail."
-  print -- " -u         Update the port tree."
-  print -- " -v         Show verbose output."
+  print -- "  -a         Use the specified architecture."
+  print -- "  -h         Show this help."
+  print -- "  -j         Use the specified jail."
+  print -- "  -U         Update the jail."
+  print -- "  -u         Update the port tree."
+  print -- "  -v         Show verbose output."
   print
   print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
 }
