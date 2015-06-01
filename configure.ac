@@ -43,13 +43,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 # Checks for programs.
-AC_PATH_PROG([zsh], [zsh], [no])
-if test x"${ac_cv_path_zsh}" = x"no"
-then
-  AC_MSG_ERROR([This script requires zsh to run.])
-fi
-ZSH_PATH=${ac_cv_path_zsh}
-AC_SUBST([ZSH_PATH])
+EMC_PATH_PROG([ZSH_PATH], [zsh], [], [AC_MSG_ERROR(This script requires zsh to run.)], [ZSH path])
 
 # Checks for libraries.
 
