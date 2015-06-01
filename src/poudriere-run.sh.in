@@ -66,14 +66,13 @@ print_usage()
   print -- "  -j         Use the specified jail."
   print -- "  -U         Update the jail."
   print -- "  -u         Update the port tree."
-  print -- "  -v         Show verbose output."
   print
   print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
 }
 
 parse_opts()
 {
-  while getopts ":a:hj:Uuv" opt
+  while getopts ":a:hj:Uu" opt
   do
     case $opt in
       a) POUDRIERE_ARCH=${OPTARG} ;;
@@ -84,7 +83,6 @@ parse_opts()
       j) POUDRIERE_JAIL_NAME=${OPTARG} ;;
       U) POUDRIERE_UPDATE_JAIL=1 ;;
       u) POUDRIERE_UPDATE_PORTS=1 ;;
-      v) VERBOSE=1 ;;
       \?)
         >&2 print -- Invalid option -${OPTARG}.
         exit 1
@@ -127,4 +125,6 @@ then
   ${POUDRIERE_PATH} jail -u -j ${POUDRIERE_JAIL_NAME}
 fi
 
-${POUDRIERE_PATH} bulk -j ${POUDRIERE_JAIL_NAME} -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
+${POUDRIERE_PATH} bulk \
+                  -j ${POUDRIERE_JAIL_NAME} \
+                  -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
