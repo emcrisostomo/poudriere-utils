@@ -2,7 +2,7 @@ Poudriere Utils
 ===============
 
 This repository contains some shell scripts that simplifies the management of
-Poudriere jails.  The `poudriere-utils.sh` script is a thin wrapper above the
+Poudriere jails.  The `poudriere-utils` script is a thin wrapper above the
 `poudriere` scripts that takes care of sensible defaults such as:
 
   * Creating a default Makefile and package list for each `poudriere` jail it
@@ -24,7 +24,7 @@ are:
 
   * The name of the file containing the list of ports to build.
 
-`poudriere-utils.sh` simplifies your workflow making the following assumptions:
+`poudriere-utils` simplifies your workflow making the following assumptions:
 
   * By default, a jail is named after the FreeBSD version and the architecture:
 
@@ -53,7 +53,7 @@ configuration file location, that by default is:
 
 As a consequence, the effect of the command:
 
-    $ poudriere-utils.sh create -v 10.1-RELEASE
+    $ poudriere-utils create -v 10.1-RELEASE
 
 will be:
 
@@ -70,8 +70,8 @@ will be:
 Installation
 ------------
 
-`poudriere-utils.sh` must be compiled and installed from the [latest
-release tarball][latest]:
+`poudriere-utils` must be compiled and installed from the [latest release
+tarball][latest]:
 
     $ ./configure
     $ make install
@@ -81,11 +81,11 @@ release tarball][latest]:
 Usage
 -----
 
-The `poudriere-utils.sh` scripts accepts the following command syntax:
+The `poudriere-utils` scripts accepts the following command syntax:
 
-    $ poudriere-utils.sh command [options]*
+    $ poudriere-utils command [options]*
 
-The `poudriere-utils.sh` scripts currently supports the following commands:
+The `poudriere-utils` scripts currently supports the following commands:
 
   * `create`: Creates a new jail.
 
@@ -98,7 +98,7 @@ The `poudriere-utils.sh` scripts currently supports the following commands:
 The command `options` are command-specific.  The help message of any command can
 be shown using the `-h` option:
 
-    $ poudriere-utils.sh create -h
+    $ poudriere-utils create -h
 
 ----
 
