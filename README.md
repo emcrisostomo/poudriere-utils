@@ -1,8 +1,37 @@
 Poudriere Utils
 ===============
 
-This repository contains some shell scripts I wrote to simplify the management
-of my Poudriere jails.
+This repository contains some shell scripts that simplifies the management of
+Poudriere jails.  The `poudriere-utils.sh` script is a thin wrapper above the
+`poudriere` scripts that takes care of sensible defaults such as:
+
+  * Create a default Makefile and package list for each `poudriere` jail it
+    creates.
+
+  * Use intuitive defaults for the `poudriere` commands it wraps.
+
+
+Usage
+-----
+
+The `poudriere-utils.sh` scripts accepts the following command syntax:
+
+    $ poudriere-utils.sh command [options]*
+
+The `poudriere-utils.sh` scripts currently supports the following commands:
+
+  * `create`: Creates a new jail.
+
+  * `delete`: Deletes an existing jail.
+
+  * `help`: Shows the help message.
+
+  * `run`: Executes a _bulk_ build.
+
+The command `options` are command-specific.  The help message of any command can
+be shown using the `-h` option:
+
+    $ poudriere-utils.sh create -h
 
 ----
 
@@ -14,15 +43,15 @@ Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
   * Redistributions of source code must retain the above copyright notice, this
-      list of conditions and the following disclaimer.
+    list of conditions and the following disclaimer.
 
   * Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-          and/or other materials provided with the distribution.
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
 
   * Neither the name of poudriere-utils nor the names of its contributors may be
-      used to endorse or promote products derived from this software without
-          specific prior written permission.
+    used to endorse or promote products derived from this software without
+    specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
