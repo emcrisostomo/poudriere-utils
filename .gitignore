@@ -1,6 +1,7 @@
 # http://www.gnu.org/software/automake
 
 Makefile.in
+Makefile
 
 # http://www.gnu.org/software/autoconf
 
@@ -12,3 +13,9 @@ Makefile.in
 /install-sh
 /missing
 /stamp-h1
+/config.*
+/config/*
+
+#
+
+/src/poudriere-run.sh
