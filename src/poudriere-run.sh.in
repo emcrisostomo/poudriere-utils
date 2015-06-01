@@ -47,23 +47,25 @@ command -v poudriere > /dev/null 2>&1 || {
 # Setting variable defaults.
 PROGNAME=$0
 : ${POUDRIERE_PATH=@POUDRIERE_PATH@}
-: ${POUDRIERE_JAIL_NAME="current"}
+: ${POUDRIERE_JAIL_NAME=""}
 : ${POUDRIERE_ETC="/usr/local/etc/poudriere.d"}
 : ${POUDRIERE_ARCH="amd64"}
 : ${POUDRIERE_UPDATE_JAIL=0}
 : ${POUDRIERE_UPDATE_PORTS=0}
+: ${POUDRIERE_PORTS_TREE=""}
 
 print_usage()
 {
   print -- "${PROGNAME}"
   print
   print -- "Usage:"
-  print -- "${PROGNAME} [option]* file+"
+  print -- "${PROGNAME} [option]*"
   print
   print -- "Options:"
   print -- "  -a         Use the specified architecture."
   print -- "  -h         Show this help."
   print -- "  -j         Use the specified jail."
+  print -- "  -p         Use the specified ports tree."
   print -- "  -U         Update the jail."
   print -- "  -u         Update the port tree."
   print
@@ -72,7 +74,7 @@ print_usage()
 
 parse_opts()
 {
-  while getopts ":a:hj:Uu" opt
+  while getopts ":a:hj:p:Uu" opt
   do
     case $opt in
       a) POUDRIERE_ARCH=${OPTARG} ;;
@@ -81,6 +83,7 @@ parse_opts()
         exit 0
         ;;
       j) POUDRIERE_JAIL_NAME=${OPTARG} ;;
+      p) POUDRIERE_PORTS_TREE=${OPTARG} ;;
       U) POUDRIERE_UPDATE_JAIL=1 ;;
       u) POUDRIERE_UPDATE_PORTS=1 ;;
       \?)
@@ -93,7 +96,7 @@ parse_opts()
         ;;
     esac
   done
-  
+
   shift $((OPTIND-1))
 
   # Sanity checks
@@ -105,19 +108,48 @@ parse_opts()
 
 check_variables()
 {
+  [[ ! -z ${POUDRIERE_JAIL_NAME} ]] || {
+    >&2 print -- Missing jail name.
+    exit 4
+  }
+  
   [[ -e ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist ]] || {
     >&2 print -- Cannot find package list file: ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
     exit 4
   }
 }
 
+set_defaults()
+{
+  # If there is only a jail, use it as a default.
+  if [[ -z ${POUDRIERE_JAIL_NAME} ]]
+  then
+    JAILS_OUTPUT=( $(${POUDRIERE_PATH} jails -qln) )
+    if (( ${#JAILS_OUTPUT} == 1 ))
+    then
+      POUDRIERE_JAIL_NAME=${JAILS_OUTPUT[1]}
+    fi
+  fi
+
+  # If there is only a port tree, use it as a default.
+  if [[ -z ${POUDRIERE_PORTS_TREE} ]]
+  then
+    PORTS_OUTPUT=( $(${POUDRIERE_PATH} ports -qln) )
+    if (( ${#PORTS_OUTPUT} == 1 ))
+    then
+      POUDRIERE_PORTS_TREE=${PORTS_OUTPUT[1]}
+    fi
+  fi
+}
+
 # Main routine.
 parse_opts $*
+set_defaults
 check_variables
 
 if (( ${POUDRIERE_UPDATE_PORTS} > 0 ))
 then
-  ${POUDRIERE_PATH} ports -u
+  ${POUDRIERE_PATH} ports -u -p ${POUDRIERE_PORTS_TREE}
 fi
 
 if (( ${POUDRIERE_UPDATE_JAIL} > 0 ))
@@ -127,4 +159,5 @@ fi
 
 ${POUDRIERE_PATH} bulk \
                   -j ${POUDRIERE_JAIL_NAME} \
+                  -p ${POUDRIERE_PORTS_TREE} \
                   -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
