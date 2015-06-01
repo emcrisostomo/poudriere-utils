@@ -46,6 +46,7 @@ command -v poudriere > /dev/null 2>&1 || {
 
 # Setting variable defaults.
 PROGNAME=$0
+: ${POUDRIERE_PATH=@POUDRIERE_PATH@}
 : ${POUDRIERE_JAIL_NAME="current"}
 : ${POUDRIERE_ETC="/usr/local/etc/poudriere.d"}
 : ${POUDRIERE_ARCH="amd64"}
@@ -118,12 +119,12 @@ check_variables
 
 if (( ${POUDRIERE_UPDATE_PORTS} > 0 ))
 then
-  poudriere ports -u
+  ${POUDRIERE_PATH} ports -u
 fi
 
 if (( ${POUDRIERE_UPDATE_JAIL} > 0 ))
 then
-  poudriere jail -u -j ${POUDRIERE_JAIL_NAME}
+  ${POUDRIERE_PATH} jail -u -j ${POUDRIERE_JAIL_NAME}
 fi
 
-poudriere bulk -j ${POUDRIERE_JAIL_NAME} -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
+${POUDRIERE_PATH} bulk -j ${POUDRIERE_JAIL_NAME} -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist

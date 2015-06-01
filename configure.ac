@@ -43,14 +43,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 # Checks for programs.
-EMC_PATH_PROG([ZSH_PATH], [zsh], [], [AC_MSG_ERROR(This script requires zsh to run.)], [ZSH path])
-
-# Checks for libraries.
-
-# Checks for header files.
-
-# Checks for typedefs, structures, and compiler characteristics.
-
-# Checks for library functions.
+EMC_PATH_PROG([ZSH_PATH],       [zsh],       [], [AC_MSG_ERROR(This script requires zsh.)],       [ZSH path])
+EMC_PATH_PROG([POUDRIERE_PATH], [poudriere], [], [AC_MSG_ERROR(This script requires poudriere.)], [Poudriere path])
 
 AC_OUTPUT
