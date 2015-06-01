@@ -70,34 +70,51 @@ print_usage()
   print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
 }
 
-while getopts ":a:hUuv" opt
-do
-  case $opt in
-    a) POUDRIERE_ARCH=${OPTARG} ;;
-    h)
-      print_usage
-      exit 0
-      ;;
-    U) POUDRIERE_UPDATE_JAIL=1 ;;
-    u) POUDRIERE_UPDATE_PORTS=1 ;;
-    v) VERBOSE=1 ;;
-    \?)
-      >&2 print -- Invalid option -${OPTARG}.
-      exit 1
-      ;;
-    :)
-      >&2 print -- Missing argument to -${OPTARG}.
-      exit 1
-      ;;
-  esac
-done
+parse_opts()
+{
+  while getopts ":a:hj:Uuv" opt
+  do
+    case $opt in
+      a) POUDRIERE_ARCH=${OPTARG} ;;
+      h)
+        print_usage
+        exit 0
+        ;;
+      j) POUDRIERE_JAIL_NAME=${OPTARG} ;;
+      U) POUDRIERE_UPDATE_JAIL=1 ;;
+      u) POUDRIERE_UPDATE_PORTS=1 ;;
+      v) VERBOSE=1 ;;
+      \?)
+        >&2 print -- Invalid option -${OPTARG}.
+        exit 1
+        ;;
+      :)
+        >&2 print -- Missing argument to -${OPTARG}.
+        exit 1
+        ;;
+    esac
+  done
+  
+  shift $((OPTIND-1))
 
-shift $((OPTIND-1))
-
-(( $# == 0 )) || {
-  >&2 print -- Syntax error.
-  exit 2
+  # Sanity checks
+  (( $# == 0 )) || {
+    >&2 print -- Syntax error.
+    exit 2
+  }
 }
+
+check_variables()
+{
+  [[ -e ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist ]] || {
+    >&2 print -- Cannot find package list file: ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
+    exit 4
+  }
+}
+
+# Main routine.
+parse_opts $*
+check_variables
 
 if (( ${POUDRIERE_UPDATE_PORTS} > 0 ))
 then
