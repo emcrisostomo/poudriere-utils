@@ -28,7 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 dist_doc_DATA  = README.md AUTHORS LICENSE NEWS
-bin_SCRIPTS  = poudriere-run.sh
+bin_SCRIPTS    = src/poudriere-run.sh
 
 dist-hook:
 # The recipe cannot assume a file in $(distdir) is writable.

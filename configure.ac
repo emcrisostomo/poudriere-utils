@@ -30,7 +30,7 @@
 # Process this file with autoconf to produce a configure script.
 dnl Copyright (C) 20145 Enrico M. Crisostomo
 AC_PREREQ([2.69])
-AC_INIT([dsc], [1.0.0], [enrico.m.crisostomo@gmail.com])
+AC_INIT([poudriere-utils], [1.0.0], [enrico.m.crisostomo@gmail.com])
 AC_COPYRIGHT([2015 (C) Enrico M. Crisostomo])
 AC_REVISION([$Revision: 1$])
 AC_CONFIG_SRCDIR([LICENSE])
