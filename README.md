@@ -67,6 +67,17 @@ will be:
 
         WITH_PKG=yes
 
+Installation
+------------
+
+`poudriere-utils.sh` must be compiled and installed from the [latest
+release tarball][latest]:
+
+    $ ./configure
+    $ make install
+
+[latest]: https://github.com/emcrisostomo/poudriere-utils/releases/latest
+
 Usage
 -----
 
