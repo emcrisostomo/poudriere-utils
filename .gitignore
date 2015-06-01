@@ -18,5 +18,6 @@ Makefile
 
 #
 
+/**/*~
 /src/poudriere-run.sh
 /src/poudriere-create.sh
