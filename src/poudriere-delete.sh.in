@@ -38,37 +38,45 @@ unsetopt glob_subst
 set -o errexit
 set -o nounset
 
+# Check for required programs.
+command -v poudriere > /dev/null 2>&1 || {
+  >&2 print -- Cannot find poudriere.
+  exit 1
+}
+
 # Setting variable defaults.
 PROGNAME=$0
+: ${POUDRIERE_PATH=@POUDRIERE_PATH@}
+: ${POUDRIERE_JAIL_NAME=""}
+: ${POUDRIERE_ETC="/usr/local/etc/poudriere.d"}
+: ${POUDRIERE_ARCH="amd64"}
 
 print_usage()
 {
   print -- "${PROGNAME}"
   print
   print -- "Usage:"
-  print -- "${PROGNAME} command [option]*"
-  print
-  print -- Commands:
-  print -- "  create     Create a new jail."
-  print -- "  delete     Delete a jail."
-  print -- "  help       Show this help."
-  print -- "  run        Run a bulk build."
+  print -- "${PROGNAME} [option]* file+"
   print
   print -- "Options:"
+  print -- "  -a         Use the specified architecture."
   print -- "  -h         Show this help."
+  print -- "  -j         Use the specified jail."
   print
   print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
 }
 
 parse_opts()
 {
-  while getopts ":h" opt
+  while getopts ":a:hj:" opt
   do
     case $opt in
+      a) POUDRIERE_ARCH=${OPTARG} ;;
       h)
         print_usage
         exit 0
         ;;
+      j) POUDRIERE_JAIL_NAME=${OPTARG} ;;
       \?)
         >&2 print -- Invalid option -${OPTARG}.
         exit 1
@@ -82,30 +90,55 @@ parse_opts()
 
   shift $((OPTIND-1))
 
-  (( $# > 0 )) || {
-    >&2 print -- Missing command.
+  # Sanity checks
+  (( $# == 0 )) || {
+    >&2 print -- Syntax error.
     exit 2
   }
+}
+
+set_variables()
+{
+  : ${POUDRIERE_JAIL_MAKEFILE=${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-make.conf}
+  : ${POUDRIERE_PKGLIST=${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist}
+}
+
+check_variables()
+{
+  [[ ! -z ${POUDRIERE_JAIL_NAME} ]] || {
+    >&2 print -- Missing jail name.
+    exit 4
+  }
+}
+
+delete_pkglist()
+{
+  rm ${POUDRIERE_PKGLIST} || {
+    >&2 print -- Could not delete ${POUDRIERE_PKGLIST}.
+  }
+}
+
+delete_jail_makefile()
+{
+  rm ${POUDRIERE_JAIL_MAKEFILE} || {
+    >&2 print -- Could not delete ${POUDRIERE_JAIL_MAKEFILE}.
+  }
+}
+
+delete_jail()
+{
+  poudriere jail \
+	    -d \
+	    -j ${POUDRIERE_JAIL_NAME}
 }
 
 # Main routine.
 parse_opts $*
 
-PU_COMMAND=$1
-shift 1
+# Setting file that depend on parsed variables.
+set_variables
+check_variables
 
-case ${PU_COMMAND} in
-  create) ;&
-  delete) ;&
-  run)
-    ${0:h}/poudriere-${PU_COMMAND}.sh $*
-    ;;
-  help)
-    print_usage
-    exit 0
-    ;;
-  *)
-    >&2 print -- Unknown command.
-    exit 2
-    ;;
-esac
+delete_pkglist
+delete_jail_makefile
+delete_jail

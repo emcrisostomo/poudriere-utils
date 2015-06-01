@@ -22,3 +22,4 @@ Makefile
 /src/poudriere-run.sh
 /src/poudriere-create.sh
 /src/poudriere-utils.sh
+/src/poudriere-delete.sh
