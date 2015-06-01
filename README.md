@@ -2,25 +2,26 @@ Poudriere Utils
 ===============
 
 This repository contains some shell scripts that simplifies the management of
-Poudriere jails.  The `poudriere-utils` script is a thin wrapper above the
-`poudriere` scripts that takes care of sensible defaults such as:
+Poudriere jails.  The `poudriere-utils` script is a thin wrapper around the
+`poudriere` script that takes care of sensible defaults such as:
 
   * Creating a default Makefile and package list for each `poudriere` jail it
     creates.
 
-  * Using intuitive defaults for the `poudriere` commands it wraps.
+  * Using intuitive defaults instead of requiring the user to specify a lot of
+    options.
 
 Defaults
 --------
 
-Many `poudriere` requires you to specify a certain number of options, and for
-very vew of them a sensible default value is inferred.  The most used options
-are:
+Many `poudriere` commands require the user to specify a certain number of
+options, and for very vew of them a sensible default value is inferred.  The
+most used options are:
 
   * The jail you are working on.
 
-  * The port ports tree the jail shall use (unless there is just one ports tree
-    named `default`).
+  * The ports tree the jail shall use (unless there is only one ports tree named
+    `default`).
 
   * The name of the file containing the list of ports to build.
 
@@ -31,9 +32,9 @@ are:
         JAIL_NAME=${VERSION}${ARCH}
 
     where `${VERSION}` is the FreeBSD version stripped of any non-digit
-    character.
+    character (`10.1-RELEASE` will become `101`).
 
-  * By default, a jail makefile is named after the jail:
+  * By default, a jail Makefile fragment is named after the jail:
 
         ${POUDRIERE_ETC}/${JAIL_NAME}-make.conf
 
@@ -46,19 +47,20 @@ are:
 
   * If only a ports tree exists, it is assumed to be the default ports tree.
 
-In the previous list, the variable `${POUDRIERE_ETC}` indicates the `poudriere`
-configuration file location, that by default is:
+In the previous examples, the variable `${POUDRIERE_ETC}` indicates the
+`poudriere` configuration file location, that by default is:
 
     /usr/local/etc/poudriere.d
 
-As a consequence, the effect of the command:
+### Example
+
+On a system with `amd64` architecture, the effect of the command:
 
     $ poudriere-utils create -v 10.1-RELEASE
 
 will be:
 
-  * Assuming the current architecture is `amd64`, creating a jail named
-    `101amd64`.
+  * Creating a jail named `101amd64`.
 
   * Creating an empty `${POUDRIERE_ETC}/101amd64-pkglist` file.
 
@@ -77,6 +79,14 @@ tarball][latest]:
     $ make install
 
 [latest]: https://github.com/emcrisostomo/poudriere-utils/releases/latest
+
+Requirements
+------------
+
+`poudriere-utils` has the following requirements:
+
+  * The Zsh shell.
+  * Poudriere.
 
 Usage
 -----
