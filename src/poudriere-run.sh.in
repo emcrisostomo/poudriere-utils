@@ -38,14 +38,75 @@ unsetopt glob_subst
 set -o errexit
 set -o nounset
 
+# Check for required programs.
 command -v poudriere > /dev/null 2>&1 || {
   >&2 print -- Cannot find poudriere.
   exit 1
 }
 
-JAIL_NAME=101amd64
-POUDRIERE_ETC=/usr/local/etc/poudriere.d
+# Setting variable defaults.
+PROGNAME=$0
+: ${POUDRIERE_JAIL_NAME="current"}
+: ${POUDRIERE_ETC="/usr/local/etc/poudriere.d"}
+: ${POUDRIERE_ARCH="amd64"}
+: ${POUDRIERE_UPDATE_JAIL=0}
+: ${POUDRIERE_UPDATE_PORTS=0}
 
-poudriere ports -u
-poudriere jail -u -j ${JAIL_NAME}
-poudriere bulk -j ${JAIL_NAME} -f ${POUDRIERE_ETC}/${JAIL_NAME}-pkglist
+print_usage()
+{
+  print -- "${PROGNAME}"
+  print
+  print -- "Usage:"
+  print -- "${PROGNAME} [option]* file+"
+  print
+  print -- "Options:"
+  print -- " -a         Use the specified architecture."
+  print -- " -h         Show this help."
+  print -- " -j         Use the specified jail."
+  print -- " -U         Update the jail."
+  print -- " -u         Update the port tree."
+  print -- " -v         Show verbose output."
+  print
+  print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
+}
+
+while getopts ":a:hUuv" opt
+do
+  case $opt in
+    a) POUDRIERE_ARCH=${OPTARG} ;;
+    h)
+      print_usage
+      exit 0
+      ;;
+    U) POUDRIERE_UPDATE_JAIL=1 ;;
+    u) POUDRIERE_UPDATE_PORTS=1 ;;
+    v) VERBOSE=1 ;;
+    \?)
+      >&2 print -- Invalid option -${OPTARG}.
+      exit 1
+      ;;
+    :)
+      >&2 print -- Missing argument to -${OPTARG}.
+      exit 1
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+(( $# == 0 )) || {
+  >&2 print -- Syntax error.
+  exit 2
+}
+
+if (( ${POUDRIERE_UPDATE_PORTS} > 0 ))
+then
+  poudriere ports -u
+fi
+
+if (( ${POUDRIERE_UPDATE_JAIL} > 0 ))
+then
+  poudriere jail -u -j ${POUDRIERE_JAIL_NAME}
+fi
+
+poudriere bulk -j ${POUDRIERE_JAIL_NAME} -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
