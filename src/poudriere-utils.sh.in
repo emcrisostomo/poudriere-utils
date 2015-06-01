@@ -98,7 +98,7 @@ case ${PU_COMMAND} in
   create) ;&
   delete) ;&
   run)
-    ${0:h}/poudriere-${PU_COMMAND}.sh $*
+    ${0:h}/poudriere-utils-${PU_COMMAND}.sh $*
     ;;
   help)
     print_usage
