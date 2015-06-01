@@ -37,7 +37,7 @@ AC_CONFIG_SRCDIR([LICENSE])
 AC_CONFIG_AUX_DIR([config])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([poudriere-run.sh])
+AC_CONFIG_FILES([src/poudriere-run.sh])
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
