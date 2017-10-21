@@ -22,4 +22,5 @@ Makefile
 /src/poudriere-utils
 /src/poudriere-utils-create
 /src/poudriere-utils-delete
-/src/poudriere-utils-run
+/src/poudriere-utils-bulk
+/src/poudriere-utils-testport
