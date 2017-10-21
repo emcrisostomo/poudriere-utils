@@ -112,7 +112,7 @@ be shown using the `-h` option:
 
 ----
 
-Copyright (c) 2015 Enrico Maria Crisostomo
+Copyright (c) 2015-2017 Enrico Maria Crisostomo
 
 All rights reserved.
 

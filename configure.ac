@@ -1,5 +1,5 @@
 #                                               -*- Autoconf -*-
-# Copyright (C) 2015 Enrico M. Crisostomo <enrico.m.crisostomo@gmail.com>
+# Copyright (C) 2015-2017 Enrico M. Crisostomo <enrico.m.crisostomo@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 dnl Copyright (C) 20145 Enrico M. Crisostomo
 AC_PREREQ([2.69])
 AC_INIT([poudriere-utils], [1.0.0], [enrico.m.crisostomo@gmail.com])
-AC_COPYRIGHT([2015 (C) Enrico M. Crisostomo])
+AC_COPYRIGHT([2015-2017 (C) Enrico M. Crisostomo])
 AC_REVISION([$Revision: 1$])
 AC_CONFIG_SRCDIR([LICENSE])
 AC_CONFIG_AUX_DIR([config])

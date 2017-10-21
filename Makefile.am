@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Enrico M. Crisostomo <enrico.m.crisostomo@gmail.com>
+# Copyright (C) 2015-2017 Enrico M. Crisostomo <enrico.m.crisostomo@gmail.com>
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without

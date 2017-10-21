@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2015 Enrico M. Crisostomo
+# Copyright (C) 2015-2017 Enrico M. Crisostomo
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
