@@ -54,6 +54,8 @@ PROGNAME=$0
 : ${POUDRIERE_UPDATE_PORTS=0}
 : ${POUDRIERE_PORTS_TREE=""}
 
+typeset -a PU_TESTPORT_ARGS
+
 print_usage()
 {
   print -- "${PROGNAME}"
@@ -96,14 +98,7 @@ parse_opts()
   done
 
   shift $((OPTIND-1))
-  PU_TESTPORT_ARGS=$*
-
-  # Sanity checks
-  (( ${#PU_TESTPORT_ARGS} == 0 )) ||
-    {
-      >&2 print -- Syntax error.
-      exit 2
-    }
+  PU_TESTPORT_ARGS=( $* )
 }
 
 check_variables()
