@@ -96,12 +96,14 @@ parse_opts()
   done
 
   shift $((OPTIND-1))
+  PU_TESTPORT_ARGS=$*
 
   # Sanity checks
-  (( $# == 0 )) || {
-    >&2 print -- Syntax error.
-    exit 2
-  }
+  (( ${#PU_TESTPORT_ARGS} == 0 )) ||
+    {
+      >&2 print -- Syntax error.
+      exit 2
+    }
 }
 
 check_variables()
@@ -157,7 +159,7 @@ then
   ${POUDRIERE_PATH} jail -u -j ${POUDRIERE_JAIL_NAME}
 fi
 
-for pu_port in $*
+for pu_port in ${PU_TESTPORTS_ARGS}
 do
   ${POUDRIERE_PATH} testport \
                     -j ${POUDRIERE_JAIL_NAME} \
