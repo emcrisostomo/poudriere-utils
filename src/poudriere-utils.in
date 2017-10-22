@@ -1,7 +1,7 @@
 #!@ZSH_PATH@
 # -*- coding: utf-8; tab-width: 2; indent-tabs-mode: nil; sh-basic-offset: 2; sh-indentation: 2; -*- vim:fenc=utf-8:et:sw=2:ts=2:sts=2
 #
-# Copyright (C) 2015 Enrico M. Crisostomo
+# Copyright (C) 2017 Enrico M. Crisostomo
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,8 @@ print_usage()
   print -- "  create     Create a new jail."
   print -- "  delete     Delete a jail."
   print -- "  help       Show this help."
-  print -- "  run        Run a bulk build."
+  print -- "  bulk       Run a bulk build."
+  print -- "  testport   Run a testport build."
   print
   print -- "Options:"
   print -- "  -h         Show this help."
@@ -97,7 +98,7 @@ shift 1
 case ${PU_COMMAND} in
   create) ;&
   delete) ;&
-  run)
+  bulk)
     ${0:h}/poudriere-utils-${PU_COMMAND} $*
     ;;
   help)
