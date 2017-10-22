@@ -159,7 +159,7 @@ then
   ${POUDRIERE_PATH} jail -u -j ${POUDRIERE_JAIL_NAME}
 fi
 
-for pu_port in ${PU_TESTPORTS_ARGS}
+for pu_port in ${PU_TESTPORT_ARGS}
 do
   ${POUDRIERE_PATH} testport \
                     -j ${POUDRIERE_JAIL_NAME} \
