@@ -1,7 +1,7 @@
 #!@ZSH_PATH@
 # -*- coding: utf-8; tab-width: 2; indent-tabs-mode: nil; sh-basic-offset: 2; sh-indentation: 2; -*- vim:fenc=utf-8:et:sw=2:ts=2:sts=2
 #
-# Copyright (C) 2015-2017 Enrico M. Crisostomo
+# Copyright (C) 2017 Enrico M. Crisostomo
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -38,38 +38,52 @@ unsetopt glob_subst
 set -o errexit
 set -o nounset
 
+# Check for required programs.
+command -v poudriere > /dev/null 2>&1 || {
+  >&2 print -- Cannot find poudriere.
+  exit 1
+}
+
 # Setting variable defaults.
 PROGNAME=$0
+: ${POUDRIERE_PATH=@POUDRIERE_PATH@}
+: ${POUDRIERE_JAIL_NAME=""}
+: ${POUDRIERE_ETC="/usr/local/etc/poudriere.d"}
+: ${POUDRIERE_ARCH="amd64"}
+: ${POUDRIERE_UPDATE_JAIL=0}
+: ${POUDRIERE_UPDATE_PORTS=0}
+: ${POUDRIERE_PORTS_TREE=""}
 
 print_usage()
 {
   print -- "${PROGNAME}"
   print
   print -- "Usage:"
-  print -- "${PROGNAME} command [option]*"
-  print
-  print -- Commands:
-  print -- "  create     Create a new jail."
-  print -- "  delete     Delete a jail."
-  print -- "  help       Show this help."
-  print -- "  bulk       Run a bulk build."
-  print -- "  testport   Run a testport build."
+  print -- "${PROGNAME} [option]*"
   print
   print -- "Options:"
   print -- "  -h         Show this help."
+  print -- "  -j         Use the specified jail."
+  print -- "  -p         Use the specified ports tree."
+  print -- "  -U         Update the jail."
+  print -- "  -u         Update the port tree."
   print
   print -- "Report bugs to <enrico.m.crisostomo@gmail.com>."
 }
 
 parse_opts()
 {
-  while getopts ":h" opt
+  while getopts ":hj:p:Uu" opt
   do
     case $opt in
       h)
         print_usage
         exit 0
         ;;
+      j) POUDRIERE_JAIL_NAME=${OPTARG} ;;
+      p) POUDRIERE_PORTS_TREE=${OPTARG} ;;
+      U) POUDRIERE_UPDATE_JAIL=1 ;;
+      u) POUDRIERE_UPDATE_PORTS=1 ;;
       \?)
         >&2 print -- Invalid option -${OPTARG}.
         exit 1
@@ -83,34 +97,73 @@ parse_opts()
 
   shift $((OPTIND-1))
 
-  (( $# > 0 )) || {
-    >&2 print -- Missing command.
+  # Sanity checks
+  (( $# == 0 )) || {
+    >&2 print -- Syntax error.
     exit 2
   }
 }
 
+check_variables()
+{
+  [[ ! -z ${POUDRIERE_JAIL_NAME} ]] ||
+    {
+      >&2 print -- Missing jail name.
+      exit 4
+    }
+
+  [[ ! -z ${POUDRIERE_PORTS_TREE} ]] ||
+    {
+      >&2 print -- Missing ports tree.
+      exit 4
+    }
+}
+
+set_defaults()
+{
+  # If there is only a jail, use it as a default.
+  if [[ -z ${POUDRIERE_JAIL_NAME} ]]
+  then
+    JAILS_OUTPUT=( $(${POUDRIERE_PATH} jails -qln) )
+    if (( ${#JAILS_OUTPUT} == 1 ))
+    then
+      POUDRIERE_JAIL_NAME=${JAILS_OUTPUT[1]}
+    fi
+  fi
+
+  # If there is only a port tree, use it as a default.
+  if [[ -z ${POUDRIERE_PORTS_TREE} ]]
+  then
+    PORTS_OUTPUT=( $(${POUDRIERE_PATH} ports -qln) )
+    if (( ${#PORTS_OUTPUT} == 1 ))
+    then
+      POUDRIERE_PORTS_TREE=${PORTS_OUTPUT[1]}
+    fi
+  fi
+}
+
 # Main routine.
 parse_opts $*
+set_defaults
+check_variables
 
-PU_COMMAND=$1
-shift 1
+if (( ${POUDRIERE_UPDATE_PORTS} > 0 ))
+then
+  ${POUDRIERE_PATH} ports -u -p ${POUDRIERE_PORTS_TREE}
+fi
 
-case ${PU_COMMAND} in
-  create)   ;&
-  delete)   ;&
-  bulk)     ;&
-  testport) ;&
-    ${0:h}/poudriere-utils-${PU_COMMAND} $*
-    ;;
-  help)
-    print_usage
-    exit 0
-    ;;
-  *)
-    >&2 print -- Unknown command.
-    exit 2
-    ;;
-esac
+if (( ${POUDRIERE_UPDATE_JAIL} > 0 ))
+then
+  ${POUDRIERE_PATH} jail -u -j ${POUDRIERE_JAIL_NAME}
+fi
+
+for pu_port in $*
+do
+  ${POUDRIERE_PATH} testport \
+                    -j ${POUDRIERE_JAIL_NAME} \
+                    -p ${POUDRIERE_PORTS_TREE} \
+                    -o ${pu_port}
+done
 
 # Local variables:
 # coding: utf-8
