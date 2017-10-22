@@ -27,8 +27,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 dist_doc_DATA  = README.md AUTHORS LICENSE NEWS
-bin_SCRIPTS  = src/poudriere-utils-create src/poudriere-utils-delete
-bin_SCRIPTS += src/poudriere-utils-run src/poudriere-utils
+bin_SCRIPTS  = src/poudriere-utils-create
+bin_SCRIPTS += src/poudriere-utils-delete
+bin_SCRIPTS += src/poudriere-utils-bulk
+bin_SCRIPTS += src/poudriere-utils-testport
+bin_SCRIPTS += src/poudriere-utils
 
 dist-hook:
 # The recipe cannot assume a file in $(distdir) is writable.
