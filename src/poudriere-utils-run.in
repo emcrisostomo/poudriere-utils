@@ -161,3 +161,13 @@ ${POUDRIERE_PATH} bulk \
                   -j ${POUDRIERE_JAIL_NAME} \
                   -p ${POUDRIERE_PORTS_TREE} \
                   -f ${POUDRIERE_ETC}/${POUDRIERE_JAIL_NAME}-pkglist
+
+# Local variables:
+# coding: utf-8
+# mode: sh
+# eval: (sh-set-shell "zsh")
+# tab-width: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# sh-indentation: 2
+# End:
